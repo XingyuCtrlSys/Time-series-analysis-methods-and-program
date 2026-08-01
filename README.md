@@ -1,47 +1,60 @@
 # Air Quality Time-Series Analysis Toolkit
 
-A reproducible Python project for exploratory analysis, detrending, fluctuation analysis, and superstatistical diagnostics of hourly air-quality time series.
+A reproducible Python toolkit for cleaning, detrending, visualizing, and performing exploratory superstatistical diagnostics on hourly air-quality time series.
 
-The repository includes cleaned demonstration data from Xuzhou for 2022, 2023, and the available portion of 2024. **The original data source is not verified, so the included data is for software demonstration only.**
+The included demonstration data cover Xuzhou air-quality observations from 2022, 2023, and part of 2024. **The original data provenance could not be independently verified; therefore, these files are provided only for software demonstration and must not be used for regulatory, health, or scientific claims.**
 
 ## Features
 
-- validates and standardizes timestamped pollutant data;
+- validates timestamps and pollutant columns;
 - reconstructs a regular hourly time grid;
-- interpolates only bounded missing intervals;
+- interpolates only bounded internal gaps;
 - generates descriptive statistics and correlation analysis;
 - performs robust STL detrending;
-- compares residuals with Gaussian and q-Gaussian curves;
-- estimates a characteristic kurtosis time scale;
-- compares positive beta distributions using AIC and KS statistics;
-- writes all tables and figures to a predictable results directory;
-- includes automated tests and GitHub Actions.
+- compares residual fluctuations with Gaussian and q-Gaussian curves;
+- estimates a characteristic time scale using average local kurtosis;
+- fits local inverse-variance values with gamma, lognormal, and inverse-gamma distributions;
+- exports all tables and figures to a predictable results directory;
+- includes automated tests and a GitHub Actions workflow.
 
-## Example outputs
+## Origin and attribution
 
-![Air-quality time-series overview](docs/assets/time_series_overview.png)
+This repository was developed from a legacy air-quality analysis script that referenced the methods and accompanying reproducibility code of the following article:
 
-![Pollutant correlation matrix](docs/assets/correlation_matrix.png)
+> B. Schäfer, C. M. Heppell, H. Rhys, and C. Beck, “Fluctuations of water quality time series in rivers follow superstatistics,” *iScience*, vol. 24, no. 8, Art. no. 102881, 2021. DOI: [10.1016/j.isci.2021.102881](https://doi.org/10.1016/j.isci.2021.102881).
 
-![Ozone fluctuation distribution](docs/assets/o3_fluctuation_distribution.png)
+- **Article:** [ScienceDirect / iScience](https://www.sciencedirect.com/science/article/pii/S258900422100849X)
+- **Original reproducibility code and River Chess data:** [OSF project `mxcrv`](https://osf.io/mxcrv/)
 
-The figures above are generated from the included demonstration data. They are examples of software output, not official air-quality conclusions.
+The article studies dissolved oxygen and electrical conductivity in the River Chess using seasonal detrending, empirical mode decomposition, q-Gaussian fluctuation analysis, local kurtosis time-scale extraction, and distributions of the local inverse variance. The article states that the code and required original, cleaned, and detrended data are available in the linked OSF project.
+
+This repository **does not reproduce the River Chess study** and does not redistribute its data. It adapts the broad analysis workflow to hourly air-quality observations and substantially rewrites the legacy project into a modular package. In particular, the present implementation uses robust STL detrending rather than the article’s seasonal-decomposition/EMD comparison, corrects the sampling-frequency assumptions for hourly data, and adds validation, configuration, testing, and reproducible output management.
+
+For a more detailed relationship between the source article, the legacy script, and this implementation, see [`docs/ORIGIN_AND_ATTRIBUTION.md`](docs/ORIGIN_AND_ATTRIBUTION.md).
 
 ## Repository structure
 
 ```text
 .
+├── .github/workflows/        # Continuous-integration tests
 ├── data/
-│   ├── raw/                 # Clean yearly demonstration files
-│   └── processed/           # Combined data and cleaning summary
-├── docs/                    # Data, method, and migration notes
-├── src/ts_analysis/         # Reusable analysis package
-├── tests/                   # Automated tests
-├── results/                 # Generated locally; ignored by Git
+│   ├── raw/                  # Yearly demonstration data
+│   └── processed/            # Combined data and cleaning summary
+├── docs/
+│   ├── DATA.md               # Input schema and data limitations
+│   ├── METHODS.md            # Implemented analysis workflow
+│   ├── ORIGIN_AND_ATTRIBUTION.md
+│   └── assets/               # README figures
+├── results/                  # Generated locally; ignored except .gitkeep
+├── src/ts_analysis/          # Reusable Python package
+├── tests/                    # Automated tests
+├── .gitignore
 ├── config.example.json
 ├── pyproject.toml
 ├── requirements.txt
-└── run_analysis.py
+├── requirements-dev.txt
+├── run_analysis.py
+└── README.md
 ```
 
 ## Quick start
@@ -62,9 +75,9 @@ Run the included demonstration:
 python run_analysis.py --config config.example.json
 ```
 
-The generated tables and PNG figures will be written to `results/`.
+Generated CSV tables and PNG figures are written to `results/`.
 
-You can also install the package in editable mode:
+The package can also be installed in editable mode:
 
 ```bash
 pip install -e .
@@ -73,7 +86,7 @@ air-ts-analysis --config config.example.json
 
 ## Use another dataset
 
-Prepare a CSV using the schema in [`docs/DATA.md`](docs/DATA.md), then run:
+Prepare a CSV that follows [`docs/DATA.md`](docs/DATA.md), then run:
 
 ```bash
 python run_analysis.py \
@@ -83,9 +96,23 @@ python run_analysis.py \
   --weekly-start 2024-01-01
 ```
 
+## Example outputs
+
+### Full time-series overview
+
+![Full time-series overview](docs/assets/time_series_overview.png)
+
+### Correlation matrix
+
+![Correlation matrix](docs/assets/correlation_matrix.png)
+
+### Example fluctuation distribution
+
+![O3 fluctuation distribution](docs/assets/o3_fluctuation_distribution.png)
+
 ## Reproducibility and interpretation
 
-The pipeline is deterministic for a fixed input file and configuration. Missing values, interpolation, detrending, and fitted distributions are explicitly exported for inspection. The outputs are exploratory and should not be interpreted as causal findings or official air-quality assessments.
+The pipeline is deterministic for a fixed input file and configuration. Missing values, interpolation, detrending, and fitted distributions are exported for inspection. Results are exploratory and must not be interpreted as causal findings, official air-quality assessments, or a reproduction of the cited article.
 
 ## Tests
 
@@ -94,10 +121,8 @@ pip install -r requirements-dev.txt
 pytest -q
 ```
 
-## Reference
+## Citation and reuse
 
-The original project was inspired by research on superstatistical fluctuations in environmental time series:
+When discussing the superstatistical methodology that motivated this project, cite the original article above and consult its OSF repository for the authors’ original code and data. When reusing this repository, describe it as an air-quality adaptation and software refactoring rather than as the original River Chess implementation.
 
-> *Fluctuations of water quality time series in rivers follow superstatistics*, iScience, 2021.
-
-See [`docs/METHODS.md`](docs/METHODS.md) for the implemented analysis steps and [`docs/MIGRATION.md`](docs/MIGRATION.md) for the repository cleanup decisions.
+No separate software license is asserted here for the source article’s accompanying code. Users should review the licensing information supplied by the original authors in the OSF project before copying or redistributing material from that project.

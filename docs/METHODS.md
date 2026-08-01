@@ -1,5 +1,7 @@
 # Methods
 
+> **Methodological origin.** The broad superstatistical workflow is motivated by Schäfer et al. (2021) and the authors’ OSF reproducibility materials. This implementation is an adaptation for hourly air-quality data, not a reproduction of the River Chess study. See [ORIGIN_AND_ATTRIBUTION.md](ORIGIN_AND_ATTRIBUTION.md).
+
 The pipeline performs the following steps:
 
 1. **Schema validation**: timestamps and pollutant columns are checked, sorted, and de-duplicated.
