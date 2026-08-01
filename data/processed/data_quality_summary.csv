@@ -1,0 +1,4 @@
+year,legacy_rows,empty_or_invalid_rows_removed,duplicate_timestamps_removed,clean_rows,start,end,CO_mg_m3_missing,NO2_ug_m3_missing,O3_ug_m3_missing,SO2_ug_m3_missing
+2022,8717,1,0,8716,2022-01-01T00:00:00Z,2022-12-31T23:00:00Z,0,0,0,0
+2023,8711,0,0,8711,2023-01-01T00:00:00Z,2023-12-31T23:00:00Z,0,0,0,0
+2024,1016011,1013687,0,2324,2024-01-01T00:00:00Z,2024-04-06T21:00:00Z,0,0,0,0

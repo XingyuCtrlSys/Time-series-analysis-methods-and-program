@@ -1,0 +1,8 @@
+{
+  "input": "data/processed/xuzhou_air_quality_2022_2024.csv",
+  "output": "results",
+  "frequency": "1h",
+  "interpolation_limit": 12,
+  "seasonal_period": 24,
+  "weekly_start": "2023-04-01"
+}
